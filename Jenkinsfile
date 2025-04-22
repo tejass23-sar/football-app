@@ -1,12 +1,6 @@
 pipeline {
   agent any
 
-  tools {
-    nodejs 'node-18'
-    maven 'maven-3'
-    jdk 'jdk-17'
-  }
-
   environment {
     FRONTEND_DIR = 'frontend/football-standings'
     BACKEND_DIR = 'backend/football--standings'
