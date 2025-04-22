@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # React frontend
+  frontend:
+    build:
+      context: ./frontend  # Path to the frontend React app
+      dockerfile: Dockerfile  # Optional if your Dockerfile is named "Dockerfile"
+    ports:
+      - "3000:3000"  # Map the React app port
+    depends_on:
+      - backend  # Wait for the backend to be ready
+    
+  # Java Spring Boot backend
+  backend:
+    build:
+      context: ./backend  # Path to the backend Java app
+      dockerfile: Dockerfile  # Optional if your Dockerfile is named "Dockerfile"
+    ports:
+      - "8080:8080"  # Map the backend port
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
