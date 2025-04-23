@@ -22,14 +22,6 @@ pipeline {
         }
       }
     }
-
-    stage('Build Backend') {
-      steps {
-        dir("${env.BACKEND_DIR}") {
-          sh 'mvn clean install -DskipTests'
-        }
-      }
-    }
     stage('Run Docker Compose Up') {
       steps {
         script {
@@ -38,6 +30,14 @@ pipeline {
         }
       }
     }
+    stage('Build Backend') {
+      steps {
+        dir("${env.BACKEND_DIR}") {
+          sh 'mvn clean install '
+        }
+      }
+    }
+    
 
   }
 
