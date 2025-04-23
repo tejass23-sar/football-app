@@ -22,18 +22,19 @@ pipeline {
         }
       }
     }
+    
+    stage('Build Backend') {
+      steps {
+        dir("${env.BACKEND_DIR}") {
+          sh 'mvn clean install '
+        }
+      }
+    }
     stage('Run Docker Compose Up') {
       steps {
         script {
           // Start the containers in the background using docker-compose up
           sh 'docker-compose  up -d'
-        }
-      }
-    }
-    stage('Build Backend') {
-      steps {
-        dir("${env.BACKEND_DIR}") {
-          sh 'mvn clean install '
         }
       }
     }
