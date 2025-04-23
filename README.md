@@ -1,62 +1,158 @@
-# Football Standings Project
+#Football Standings App
 
-## Overview
-This project provides an API for fetching football standings, teams, leagues, and countries using the [API Football](https://apiv3.apifootball.com/) service. The frontend provides an interface to view the standings of various football leagues, filter by country, league, and team, and optionally work in offline mode for resilience during API downtime.
+This is a full-stack football standings app built using React for the frontend and Spring Boot for the backend. The app fetches football team standings from a public API and displays them on the UI. The project is fully Dockerized, with CI/CD pipeline setup using Jenkins.
 
-## Design and Implementation Approach
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
-### Backend (Spring Boot)
-- **FootballService**: The service layer interacts with the external API to fetch the football data. This includes countries, leagues, teams, and standings.
-- **Caching**: Caching is implemented using `@Cacheable` annotations to store results of the fetched data to reduce external API calls.
-- **Error Handling**: In case of failure to fetch data from the API, the backend handles errors and returns empty lists.
-- **API Endpoints**:
-  - `/api/v1/countries`: Fetches a list of countries.
-  - `/api/v1/leagues`: Fetches leagues for a given country.
-  - `/api/v1/teams`: Fetches teams for a given league.
-  - `/api/v1/standings`: Fetches standings for a given country, league, and team.
-- **Offline Mode**: Caching is leveraged for supporting offline functionality. Data previously fetched is available even if the API is not reachable.
+#Project Structure
+	frontend/: Contains the React app for displaying football standings.
 
-### Frontend (React)
-- **User Interface**: The frontend is a simple form-based UI where users can select a country, league, and team to fetch football standings.
-- **Offline Mode**: When the "Offline Mode" toggle is enabled, the app will use the cached data if the public API is unavailable.
-- **API Calls**: API calls to the backend are made using Axios. In case of failure to fetch data from the backend, the offline mode serves the previously cached results.
+	backend/: Contains the Spring Boot application that serves the football standings data.
 
-### Technologies Used:
-- **Backend**: Spring Boot, RestTemplate, Cacheable
-- **Frontend**: React, Axios
-- **Database**: No database used (Data is fetched from the external API and cached in-memory)
-- **Caching**: Spring's built-in caching mechanism
-- **UI**: Simple forms and dropdowns with state management in React
+	docker-compose.yaml: Docker Compose configuration to run the frontend and backend in separate containers.
 
-## Offline Mode Limitations
-- Offline Mode will only work if data has been previously fetched and stored in cache. If the application is running for the first time or if the cache is empty and the service is down, offline mode will not work.
-- **Known API Limitation**: The external API (apiv3.apifootball.com) only returns a limited number of countries (currently only England and France are available), and similarly, the leagues data is also incomplete.
+	Jenkinsfile: Jenkins pipeline configuration to build, test, and deploy the Dockerized app.
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
-## Known Issues from provided APIS of (https://apifootball.com/documentation/)
-1. **Countries API**: The `get_countries` endpoint only returns a limited number of countries (currently just two: England and France). This is a limitation of the external API, not the project itself.
-2. **Leagues API**: The `getLeagues` endpoint also returns incomplete data and does not include all leagues.
-3. **Offline Mode**: Offline mode works only if data has been fetched previously. If the service is down on the first run and no data is cached, the app will fail to fetch data.
+#Prerequisites
+Before running the project, ensure you have the following installed:
+
+	Docker: To build and run Docker containers.
+
+	Docker Compose: To run multi-container Docker applications.
+
+	Jenkins: For continuous integration and deployment (optional).
+
+	Node.js (for React): Only required for local development or custom builds.
+
+	Java (for Spring Boot): Required for backend development.
+----------------------------------------------------------------------------------------------------------------------------------------------------
+#Running the Project Locally
+
+##To run the project locally using Docker, follow these steps:
+
+	Clone the repository:
+
+	git clone https://github.com/tejass23-sar/football-app/
+	cd football-app
+	Build and run the containers using Docker Compose:
+	before building docker, make sure that you change localhost with IP of Docker instance, at first it is pointing localhost
+		docker-compose up --build
+		
+	This will:
+
+		Build the frontend and backend Docker images.
+
+	Start the containers in detached mode.
+
+	Access the application:
+
+		The frontend will be available at http://localhost:3000.
+
+		The backend API will be available at http://localhost:8080.
+		
+
+##Steps to Run the Project Locally Without Docker:
+
+		Prerequisites
+		Make sure you have the following software installed on your local machine:
+
+		Node.js (for the frontend React app): Install Node.js
+		Java (for the backend Spring Boot app): Install Java
+		Maven (for Spring Boot backend): Install Maven
+		Git (to clone the repository): Install Git
+
+		1. Clone the Repository
+		    Clone the project repository to your local machine:
+			git clone https://github.com/tejass23-sar/football-app/
+			cd football-app
+			
+		2. Set Up the Backend (Spring Boot)
+		   Navigate to the backend directory:
+
+			cd backend/football-standings
+			Build the backend project:
+
+		3.If you're using Maven, run:
+			mvn clean install
+			This will compile the backend, run tests, and create a runnable JAR file.
+
+		4.Run the backend application:
+
+			To run the Spring Boot application locally, use the following command:
+			mvn spring-boot:run
+			
+			This will start the backend server on http://localhost:8080.
+
+		5. Set Up the Frontend (React)
+					Navigate to the frontend directory:
+					cd ../frontend/football-standings
+					Install frontend dependencies:
+
+					Make sure you have Node.js installed. Run the following command to install the necessary dependencies for the frontend:
+
+					npm install
+					Set the backend URL for React:
+
+					Create an .env file in the frontend directory and add the following:
+
+					REACT_APP_BACKEND_URL=http://localhost:8080
+					Run the React app:
+
+					After installing the dependencies, run the React development server:
+
+					npm start
+					This will start the React development server on http://localhost:3000.
+
+		6. Access the Application
+					The React frontend will be available at http://localhost:3000.
+
+					The Spring Boot backend will be available at http://localhost:8080/swagger-ui.html.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+#Docker Compose Configuration
+
+The project uses Docker Compose to manage both the frontend and backend services.
+
+#docker-compose.yaml
+update REACT_APP_BACKEND_URL with the ip of your instance on which docker is running.
+In the frontend service, we define the REACT_APP_BACKEND_URL environment variable to point to the backend service using Docker's internal network.
+
+.env File in React
+To make React pick the correct backend URL, create an .env file in the frontend directory with the following content:
+
+REACT_APP_BACKEND_URL=http://localhost:8080  # Or the appropriate backend URL
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Jenkins Pipeline
+
+	Jenkinsfile :This pipeline automates the build, test, and deploy process for the Dockerized project. It uses Jenkins to:
+
+	Build the frontend and backend Docker images.
+
+	Run tests for both frontend (React) and backend (Spring Boot).
+
+	Push the Docker images to a registry (e.g., Docker Hub, AWS ECR).
+
+	Deploy the app using Docker Compose.
 
 
-## Design Patterns Used
-- **Singleton Pattern**: The Spring service class `FootballServiceImpl` is a Singleton and is managed by the Spring container.
-- **Factory Pattern**: Not explicitly required or used in this project as the API interactions are simple and do not involve complex object creation.
-- **Strategy Pattern**: The project does not implement a strategy pattern in the backend. However, the offline mode toggle functionality can be considered an optional behavior to change the way data is fetched.
+#How to Trigger the Jenkins Pipeline
 
-## How to Run the Project
+	Manual Trigger: You can manually trigger the Jenkins pipeline from the Jenkins UI.
 
-### Backend (Spring Boot)
-1. Clone the repository.
-2. Set up your application properties with your own API keys in `application.properties`:
-   ```properties
-   api.football.key=YOUR_API_KEY
-   api.football.url=https://apiv3.apifootball.com/
-#Run the Spring Boot application:
-	mvn spring-boot:run
-	The API will be available at http://localhost:8080.
-	
-#Frontend (React)
-Clone the repository.
- Navigate to the frontend directory 
- npm start
-The frontend will be available at http://localhost:3000.
+	Git Hook: Alternatively, configure a webhook to automatically trigger the pipeline when there are changes in your repository.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+#Additional Notes:
+	Frontend Environment: The React app relies on the REACT_APP_BACKEND_URL environment variable to point to the backend service. By default, it is set to http://localhost:8080, but it can be changed using Docker Compose or the .env file for local development.
+
+	Backend: The backend service (Spring Boot) exposes the API on port 8080.
+
+	Docker Compose: The Docker Compose file ensures that the React and Spring Boot containers are orchestrated and run together.
+
+
+#Conclusion:
+
+This project provides an end-to-end solution for displaying football standings, including a Dockerized setup and CI/CD pipeline using Jenkins. Follow the steps to build, test, and deploy your app with ease.
+
