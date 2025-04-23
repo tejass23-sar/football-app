@@ -30,14 +30,6 @@ pipeline {
         }
       }
     }
-
-    stage('Unit Tests') {
-      steps {
-        dir("${env.BACKEND_DIR}") {
-          sh 'echo "mvn test" '
-        }
-      }
-    }
   }
 
   post {
