@@ -9,7 +9,12 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git 'https://github.com/tejass23-sar/football-app.git'
+       stage('Checkout') {
+  steps {
+    git branch: 'main', url: 'https://github.com/tejass23-sar/football-app.git'
+  }
+}
+
       }
     }
 
