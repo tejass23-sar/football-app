@@ -6,10 +6,6 @@ pipeline {
     BACKEND_DIR = 'backend/football--standings'
   }
 
-  tools {
-    maven 'maven-3'   // Ensure these are defined in Jenkins → Global Tool Configuration
-    jdk 'jdk-17'
-  }
 
   stages {
     stage('Checkout') {
