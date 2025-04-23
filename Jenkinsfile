@@ -26,7 +26,7 @@ pipeline {
       steps {
         script {
           // Start the containers in the background using docker-compose up
-          sh 'sudo docker-compose  up -d'
+          sh 'docker-compose  up -d'
         }
       }
     }
