@@ -6,6 +6,9 @@ WORKDIR /app/football-standings
 
 # Install dependencies
 COPY football-standings /app/football-standings
+ARG REACT_APP_BACKEND_URL
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+RUN npm ci
 
 # Install dependencies with correct permissions
 RUN npm ci --unsafe-perm
