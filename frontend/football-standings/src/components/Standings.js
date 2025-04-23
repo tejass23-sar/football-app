@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const Standings = () => {
     const [country, setCountry] = useState('');
     const [league, setLeague] = useState('');
@@ -17,7 +19,7 @@ const Standings = () => {
     useEffect(() => {
         const fetchCountries = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/countries');
+                const response = await axios.get(`${BASE_URL}/api/v1/countries`);
                 setCountries(response.data);
             } catch (err) {
                 setError('Failed to fetch countries. Service is down');
@@ -30,7 +32,7 @@ const Standings = () => {
         if (country) {
             const fetchLeagues = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8080/api/v1/leagues', {
+                    const response = await axios.get(`${BASE_URL}/api/v1/leagues`, {
                         params: { country },
                     });
                     setLeagues(response.data);
@@ -49,7 +51,7 @@ const Standings = () => {
         if (leagueId) {
             const fetchTeams = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8080/api/v1/teams', {
+                    const response = await axios.get(`${BASE_URL}/api/v1/teams`, {
                         params: { league: leagueId  },
                     });
                     setTeams(response.data);
@@ -66,7 +68,7 @@ const Standings = () => {
         setLoading(true);
         setError('');
         try {
-            const response = await axios.get('http://localhost:8080/api/v1/standings', {
+            const response = await axios.get(`${BASE_URL}/api/v1/standings`, {
                 params: { country, league: leagueId, team },
             });
             setStandings(response.data);
