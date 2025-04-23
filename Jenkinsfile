@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     FRONTEND_DIR = 'frontend/football-standings'
-    BACKEND_DIR = 'backend/football--standings'
+    BACKEND_DIR = 'backend/football-standings'
   }
 
 
