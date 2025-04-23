@@ -30,7 +30,7 @@ pipeline {
         }
       }
     }
-    stage('Run Docker Compose Up') {
+    stage('Run Docker Compose down before deployment') {
       steps {
         script {
           // Stop the existing docker comose instances 
