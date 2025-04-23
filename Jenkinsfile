@@ -33,6 +33,14 @@ pipeline {
     stage('Run Docker Compose Up') {
       steps {
         script {
+          // Stop the existing docker comose instances 
+          sh 'docker-compose  down'
+        }
+      }
+    }
+    stage('Run Docker Compose Up') {
+      steps {
+        script {
           // Start the containers in the background using docker-compose up
           sh 'docker-compose  up -d'
         }
